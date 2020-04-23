@@ -24,21 +24,60 @@ const jokes = {
  };
 
 //setup a render page, which is later used in app.get(){... response.send}
-function render(message) {
-const document = `<html>
-    <head><title>home</title></head>
-    <body><h1>Greetings, ${message}.</h1>
-    <div>${pickedJoke}</div>
-    </body>
-    </html>`
-    return document
+function render(name) {
+    let document;
+    if (pickedJoke === jokes.joke1) {
+        document = `<html>
+        <head><title>home</title></head>
+        <body><h1>Greetings, ${firstLetterCap(name)}.</h1>
+        <div>${pickedJoke}</div>
+        </body>
+        </html>`
+        return document
+    } else if (pickedJoke === jokes.joke2) {
+        document = `<html>
+        <head><title>home</title></head>
+        <body><h1>Greetings ,${firstLetterCap(name)}.</h1>
+        <div>${pickedJoke}</div>
+        </body>
+        </html>`
+        return document
+    } else if (pickedJoke === jokes.joke3) {
+        document = `<html>
+        <head><title>home</title></head>
+        <body><h1>Greetings ,${firstLetterCap(name)}.</h1>
+        <div>${pickedJoke}</div>
+        </body>
+        </html>`
+        return document
+    } else if (pickedJoke === jokes.joke4) {
+        document = `<html>
+        <head><title>home</title></head>
+        <body><h1>Greetings ,${firstLetterCap(name)}.</h1>
+        <div>${pickedJoke}</div>
+        </body>
+        </html>`
+        return document
+    } else if (pickedJoke === jokes.joke5) {
+        document = `<html>
+        <head><title>home</title></head>
+        <body><h1>Greetings ,${firstLetterCap(name)}.</h1>
+        <div>${pickedJoke}</div>
+        </body>
+        </html>`
+        return document
+}
 }
 
 let pickedJoke;
+// change first letter to capital
+function firstLetterCap(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
-// language = message1, age = message2
+// jokePicker assigns a joke to pickedJoke var, based on client parameters. It is called within app.get()
 function jokePicker(age, dutch) {
-    let randomB = Math.round(Math.random())
+    let randomB = Math.random()
     if (age >= '30' && dutch === 'yes') {
         pickedJoke = jokes.joke1;
     } else if (age < '30' && dutch === 'yes') {
@@ -58,11 +97,10 @@ function jokePicker(age, dutch) {
 // note that end arg must be callback function. SO request & response are both within this arg!
 app.get('/user/:name/:age/:dutch/', ((request, response) => {
     console.log(request.path)
-    const message = request.params.name
+    const name = request.params.name
     const age = request.params.age
     const language = request.params.dutch
     jokePicker(age, language)
-    const page = render(message)
+    const page = render(name)
     response.send(page)
-    })
-)
+    }))
