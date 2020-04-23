@@ -23,43 +23,40 @@ const jokes = {
  };
 
 //setup a render page, which is later used in app.get(){... response.send}
-function render(message0, message1, message2) {
+function render(message) {
 const document = `<html>
     <head><title>home</title></head>
-    <body><h1>Greetings, ${message0}.</h1>
-    <div>You are ${message1} years old. You understand ${message2}. Prepare for some quality jokes 
+    <body><h1>Greetings, ${message}.</h1>
+    <div>${pickedJoke}</div>
     </body>
     </html>`
     return document
 }
 
-function selectAge(age) {
-    if (age === '25') {
-        return "age is 25"
-    } else {
-        return "sum other age"
+let pickedJoke;
+
+// language = message1, age = message2
+function jokePicker(dutch, age) {
+    if (dutch === 'yes' && age > '30') {
+        pickedJoke = 'dutch joke for old people';
+    } else if (dutch === 'yes' && age <= '30') {
+        pickedJoke = 'dutch joke for hip people';
+    } else if (dutch === 'no' && age > '30') {
+        pickedJoke = 'english joke for old people';
+    } else if (dutch === 'no' && age <= '30') {
+        pickedJoke = 'english joke for old people'; 
     }
 }
 
-function understandDutch(dutch) {
-    if (dutch === 'yes') {
-        return "You understand Dutch"
-    } else if (dutch === 'no') {
-        return "What'd you say?"
-    } else {
-        return "please write 'yes' or 'no'"
-    }
-}
 // register endpoint. 1st arg = route, 2nd = callback that runs when route is requested
 // note that end arg must be callback function. SO request & response are both within this arg!
-app.get('/user/:name/:dutch/:age/', ((request, response) => {
+app.get('/user/:name/:age/:dutch/', ((request, response) => {
     console.log(request.path)
-    const message0 = request.params.name
+    const message = request.params.name
     const language = request.params.dutch
     const age = request.params.age
-    const message1 = understandDutch(language)
-    const message2 = selectAge(age)
-    const page = render(message0, message1, message2)
+    jokePicker(language, age)
+    const page = render(message)
     response.send(page)
     })
 )
