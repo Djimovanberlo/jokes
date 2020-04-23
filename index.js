@@ -19,7 +19,8 @@ const jokes = {
     joke2: "this is the second joke",
     joke3: "this be da third",
     joke4: "und jetzt dem 4. humor",
-    joke5: "den siste spoek"
+    joke5: "den siste spoek",
+    errormsg: "Oops, something went wrong!"
  };
 
 //setup a render page, which is later used in app.get(){... response.send}
@@ -36,15 +37,20 @@ const document = `<html>
 let pickedJoke;
 
 // language = message1, age = message2
-function jokePicker(dutch, age) {
-    if (dutch === 'yes' && age > '30') {
-        pickedJoke = 'dutch joke for old people';
-    } else if (dutch === 'yes' && age <= '30') {
-        pickedJoke = 'dutch joke for hip people';
-    } else if (dutch === 'no' && age > '30') {
-        pickedJoke = 'english joke for old people';
-    } else if (dutch === 'no' && age <= '30') {
-        pickedJoke = 'english joke for old people'; 
+function jokePicker(age, dutch) {
+    let randomB = Math.round(Math.random())
+    if (age >= '30' && dutch === 'yes') {
+        pickedJoke = jokes.joke1;
+    } else if (age < '30' && dutch === 'yes') {
+        pickedJoke = jokes.joke2;
+    } else if (age >= '30' && dutch === 'no') {
+        pickedJoke = jokes.joke3;
+    } else if (age < '30' && dutch === 'no' && randomB >= 0.5) {
+        pickedJoke = jokes.joke4; 
+    } else if (age < '30' && dutch === 'no' && randomB < 0.5) {
+        pickedJoke = jokes.joke5;
+    } else {
+        pickedJoke = jokes.errormsg;
     }
 }
 
@@ -53,9 +59,9 @@ function jokePicker(dutch, age) {
 app.get('/user/:name/:age/:dutch/', ((request, response) => {
     console.log(request.path)
     const message = request.params.name
-    const language = request.params.dutch
     const age = request.params.age
-    jokePicker(language, age)
+    const language = request.params.dutch
+    jokePicker(age, language)
     const page = render(message)
     response.send(page)
     })
